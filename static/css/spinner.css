@@ -1,0 +1,33 @@
+#spinner:not([hidden]) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+#spinner::after {
+  position: relative;
+  content: "";
+  width: 80px;
+  height: 80px;
+  z-index: 3;
+  border: 5px solid #1CE8B5;
+  border-top: 5px solid #660033;
+  border-radius: 100%;
+  will-change: transform;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

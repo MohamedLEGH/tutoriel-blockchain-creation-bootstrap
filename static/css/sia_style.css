@@ -1,0 +1,19 @@
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: #660033;
+  border-color: #660033;
+}
+
+hr {
+  z-index: 2;
+  position: relative;
+  height: 1px;
+  background-color: #1ce8b5;
+}
+
+.custom_color_bordeaux {
+  color: #660033;
+}

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+  <meta name="description" content="Blockchain web interface">
+  <meta name="author" content="Mohamed Amine LEGHERABA">
+  <title>My Blockchain</title>
+
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/jquery.min.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.bundle.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename = 'js/api_functions.js')}}"></script>
+
+  <link rel="stylesheet" href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename = 'css/spinner.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename = 'css/sia_style.css')}}" type="text/css" />
+
+</head>
+
+<body>
+
+  <div>
+    <div hidden id="spinner"></div>
+  </div>
+
+  <div id="all_stuff">
+
+
+    <div class="d-flex flex-row justify-content-between">
+      {% if address %}
+      <h1 class="text-center custom_color_bordeaux">My address : {{ address }}</h1>
+      {% else %}
+      <h1 class="text-center custom_color_bordeaux"> No address available</h1>
+      {% endif %}
+      <img src="{{url_for('static',filename='img/logoSia.jpg')}}" width="142" height="53" alt="Sia logo"
+        title="Sia logo">
+    </div>
+    <div class="d-flex flex-row justify-content-around">
+      <h1 class="custom_color_bordeaux"> My IP : {{ request.host }}
+      </h1>
+      <h1 class="custom_color_bordeaux">My Account : {{myaccount}}</h1>
+    </div>
+
+    <div class="form-group col-12">
+      <hr>
+    </div>
+
+
+    <div class="container-fluid">
+      <div class="d-flex flex-row justify-content-around">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#txModal">
+          Send transaction
+        </button>
+
+        <!-- Modal -->
+        <form id="add_tx_form" action="/transaction" method="post">
+
+          <div class="modal fade" id="txModal" tabindex="-1" role="dialog" aria-labelledby="txModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="txModalLabel">New transaction</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div>
+                    <label for="receiver">Receiver address: </label>
+                    <input type="text" name="receiver" id="receiver" required>
+                  </div>
+                  <div>
+                    <label for="amount">Amount: </label>
+                    <input type="number" name="amount" id="amount" required>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="send_tx()">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <form action="/chain" method="get">
+          <input type="submit" name="chain" class="btn btn-primary" value="Get chain" />
+        </form>
+
+        <button type="button" class="btn btn-primary" name="consensus" onclick="call_consensus()">Consensus</button>
+
+        <button type="button" name="mine_block" class="btn btn-primary" onclick="call_mining()">Mine</button>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#peerModal">
+          Add peer
+        </button>
+        <!-- Modal -->
+        <form id="add_peer_form" action="/node" method="post">
+
+          <div class="modal fade" id="peerModal" tabindex="-1" role="dialog" aria-labelledby="peerModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="peerModalLabel">New peer</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                  <div>
+                    <label for="node_url">Peer ip: </label>
+                    <input type="text" name="node_url" id="node_url" required>
+                  </div>
+                  <div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_peer()">Add</input>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="form-group col-12">
+      <hr>
+    </div>
+
+
+    <div class="container-fluid">
+      <div class="d-flex flex-row justify-content-between">
+        <div>
+          <h3 class="custom_color_bordeaux">Accounts: </h3>
+
+          {% if allaccounts|length > 0 %}
+
+
+          {% for key,value in allaccounts.items() %}
+          <div class="custom_color_bordeaux">
+            {{key}} : {{value}}
+          </div>
+          {% endfor %}
+          {%else%}
+          <div class="custom_color_bordeaux">
+            {{address}} : 0
+
+          </div>
+          {%endif%}
+
+        </div>
+        <div>
+          <h3 class="custom_color_bordeaux text-center">Peers: </h3>
+          {% if peers|length > 0 %}
+
+
+          {% for peer in peers %}
+          <div class="custom_color_bordeaux">{{peer}}</div>
+          {% endfor %}
+          {%else%}
+          <div class="custom_color_bordeaux">No peers</div>
+          {%endif%}
+
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-12">
+      <hr>
+    </div>
+
+
+
+    <div>
+
+
+      <h3 class="custom_color_bordeaux">Pending transactions: </h3>
+      {% if pending_tx|length > 0 %}
+
+
+
+      <table class="table table-striped table-bordered table-hover table-sm custom_color_bordeaux">
+        <thead>
+          <tr>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Signature</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in pending_tx %}
+
+          <tr>
+            <td>{{ tx["sender"] }}</td>
+            <td>{{ tx["receiver"] }}</td>
+            <td>{{ tx["amount"] }} </td>
+            <td>{{ tx["timestamp"] | timestamp_to_utc}} </td>
+            <td data-toggle="modal" data-target="#signatureModal{{tx['signature']}}">
+              {{ tx["signature"][:10] }}...{{tx["signature"][-10:]}}</td>
+          </tr>
+
+          <div class="modal fade" id="signatureModal{{tx['signature']}}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+              <div class="modal-content">
+                <div class="modal-body d-flex flex-row justify-content-between text-center">
+                  {{tx["signature"]}}
+                </div>
+              </div>
+            </div>
+
+
+            {% endfor %}
+
+        </tbody>
+      </table>
+      {% else %}
+      <p class="custom_color_bordeaux">No pending transactions</p>
+      {% endif %}
+
+      <div class="form-group col-12">
+        <hr>
+      </div>
+
+
+
+
+
+
+
+
+
+      <h3 class="custom_color_bordeaux">Last Block</h3>
+      {% if lastblock %}
+
+
+      <p class="custom_color_bordeaux"> Index : {{ lastblock["index"] }} </p>
+      <p class="custom_color_bordeaux"> Nonce : {{ lastblock["nonce"] }} </p>
+      <p class="custom_color_bordeaux"> Timestamp : {{ lastblock["timestamp"] | timestamp_to_utc }} </p>
+      <p class="custom_color_bordeaux"> Miner : {{ lastblock["miner"] }} </p>
+      <p class="custom_color_bordeaux"> Previous Hash : {{ lastblock["previous_hash"] }} </p>
+      <p class="custom_color_bordeaux"> Hash : {{ lastblock["hashval"] }} </p>
+      <p class="custom_color_bordeaux"> Signature : {{ lastblock["signature"] }} </p>
+
+      <div class="d-flex flex-row justify-content-center">
+        <table class="table table-striped table-bordered table-hover w-auto small custom_color_bordeaux">
+          <thead>
+            <tr>
+              <th scope="col">Tx number</th>
+              <th scope="col">From</th>
+              <th scope="col">To</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Date</th>
+              <th scope="col">Signature</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in lastblock["transactions"] %}
+
+            <tr>
+              <td>{{ tx["tx_number"] }}</td>
+              <td>{{ tx["sender"] }}</td>
+              <td>{{ tx["receiver"] }}</td>
+              <td>{{ tx["amount"] }} </td>
+              <td>{{ tx["timestamp"] | timestamp_to_utc}} </td>
+              <td data-toggle="modal" data-target="#signatureModal{{tx['signature']}}">
+                {{ tx["signature"][:10] }}...{{tx["signature"][-10:]}}</td>
+            </tr>
+
+            <div class="modal fade" id="signatureModal{{tx['signature']}}" tabindex="-1" role="dialog"
+              aria-hidden="true">
+              <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                  <div class="modal-body d-flex flex-row justify-content-between text-center">
+                    {{tx["signature"]}}
+                  </div>
+                </div>
+              </div>
+
+
+              {% endfor %}
+
+          </tbody>
+          {% else %}
+          <p class="custom_color_bordeaux">No block yet, please mine or get blockchain from another peer</p>
+          {% endif %}
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
