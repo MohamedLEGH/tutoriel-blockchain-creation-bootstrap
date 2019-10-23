@@ -8,7 +8,7 @@ blockchain.create_genesis_block()
 print("blockchain: ")
 print(blockchain.to_dict())
 
-first_block = blockchain.chain[-1]
+first_block = blockchain.blocks_list[0]
 
 print("First block: ")
 print(first_block)
