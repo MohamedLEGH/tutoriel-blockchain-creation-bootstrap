@@ -134,7 +134,7 @@ def block_transaction_by_id(id_block, id_transaction):
 def create_chain():
     global blockchain
     blockchain = Blockchain(difficulty, address)
-    blockchain.create_genesis_block(wallet)
+    blockchain.create_genesis_block()
     return "Success\n", 200
 
 
@@ -143,10 +143,10 @@ def mine():
     global blockchain
     if blockchain == None:
         blockchain = Blockchain(difficulty)
-        blockchain.create_genesis_block(wallet)
+        blockchain.create_genesis_block()
         return "Blockchain created \n", 200
     else:
-        blockchain.mine_block(wallet)
+        blockchain.mine_block()
         return "Block mined\n", 200
 
 
@@ -158,7 +158,7 @@ def new_transaction():
         tx_data = request.get_json()
         receiver = tx_data["receiver"]
         amount = tx_data["amount"]
-        blockchain.add_transaction(sender, receiver, amount, wallet)
+        blockchain.add_transaction(sender, receiver, amount)
         return "Success\n", 200
     else:
         return "No blockchain, please create a new chain or get the chain from another peer"
