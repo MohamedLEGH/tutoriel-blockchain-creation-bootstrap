@@ -53,7 +53,7 @@ def hello():
     if blockchain:
         chain = blockchain.to_dict()
         lastblock = chain[-1]
-        pending_tx = blockchain.get_pending_transactions()
+        pending_tx = blockchain.tx_pool
 
     return render_template('interface.html',
                            address=address,
@@ -210,7 +210,7 @@ def add_block():
 @node.route('/pending_transactions', methods=['GET'])
 def get_pending_transactions():
     if blockchain:
-        return jsonify(blockchain.get_pending_transactions())
+        return jsonify(blockchain.tx_pool)
     else:
         return "No blockchain, please create a new chain or get the chain from another peer"
 
@@ -218,17 +218,10 @@ def get_pending_transactions():
 @node.route('/pending_transactions/<int:id>', methods=['GET'])
 def get_pending_transaction(id):
     if blockchain:
-        return jsonify(blockchain.get_pending_transaction(id))
+        return jsonify(blockchain.tx_pool[id])
     else:
         return "No blockchain, please create a new chain or get the chain from another peer"
 
-
-@node.route('/my_account', methods=['GET'])
-def my_account():
-    if blockchain:
-        return jsonify(blockchain.get_account(address))
-    else:
-        return "No blockchain, please create a new chain or get the chain from another peer"
 
 
 def clean_file():
