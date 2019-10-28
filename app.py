@@ -182,6 +182,10 @@ def get_peers():
 def consensus():
     """
     Our simple consensus algorithm. If a longer valid chain is found, our chain is replaced with it.
+    
+    ps : To request a node do: 
+    r = requests.get("ip_node:500/chain")
+    chain = r.json
     """
     global blockchain
     # todo
