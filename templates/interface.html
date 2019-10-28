@@ -197,7 +197,6 @@
             <th scope="col">To</th>
             <th scope="col">Amount</th>
             <th scope="col">Date</th>
-            <th scope="col">Signature</th>
           </tr>
         </thead>
         <tbody>
@@ -208,18 +207,8 @@
             <td>{{ tx["receiver"] }}</td>
             <td>{{ tx["amount"] }} </td>
             <td>{{ tx["timestamp"] | timestamp_to_utc}} </td>
-            <td data-toggle="modal" data-target="#signatureModal{{tx['signature']}}">
-              {{ tx["signature"][:10] }}...{{tx["signature"][-10:]}}</td>
           </tr>
 
-          <div class="modal fade" id="signatureModal{{tx['signature']}}" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-              <div class="modal-content">
-                <div class="modal-body d-flex flex-row justify-content-between text-center">
-                  {{tx["signature"]}}
-                </div>
-              </div>
-            </div>
 
 
             {% endfor %}
@@ -252,7 +241,6 @@
       <p class="custom_color_bordeaux"> Miner : {{ lastblock["miner"] }} </p>
       <p class="custom_color_bordeaux"> Previous Hash : {{ lastblock["previous_hash"] }} </p>
       <p class="custom_color_bordeaux"> Hash : {{ lastblock["hashval"] }} </p>
-      <p class="custom_color_bordeaux"> Signature : {{ lastblock["signature"] }} </p>
 
       <div class="d-flex flex-row justify-content-center">
         <table class="table table-striped table-bordered table-hover w-auto small custom_color_bordeaux">
@@ -263,7 +251,6 @@
               <th scope="col">To</th>
               <th scope="col">Amount</th>
               <th scope="col">Date</th>
-              <th scope="col">Signature</th>
             </tr>
           </thead>
           <tbody>
@@ -275,19 +262,8 @@
               <td>{{ tx["receiver"] }}</td>
               <td>{{ tx["amount"] }} </td>
               <td>{{ tx["timestamp"] | timestamp_to_utc}} </td>
-              <td data-toggle="modal" data-target="#signatureModal{{tx['signature']}}">
-                {{ tx["signature"][:10] }}...{{tx["signature"][-10:]}}</td>
             </tr>
 
-            <div class="modal fade" id="signatureModal{{tx['signature']}}" tabindex="-1" role="dialog"
-              aria-hidden="true">
-              <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                  <div class="modal-body d-flex flex-row justify-content-between text-center">
-                    {{tx["signature"]}}
-                  </div>
-                </div>
-              </div>
 
 
               {% endfor %}
