@@ -53,8 +53,6 @@ def hello():
     if blockchain:
         chain = blockchain.to_dict()
         lastblock = chain[-1]
-        allaccounts = blockchain.get_accounts()
-        myaccount = blockchain.get_account(address)
         pending_tx = blockchain.get_pending_transactions()
 
     return render_template('interface.html',
@@ -76,9 +74,9 @@ def get_chain():
         chain = blockchain.to_dict()
         print("chain is")
         print(chain)
-        return jsonify({"length": len(chain), "chain": chain, "accounts": blockchain.accounts}), 200
+        return jsonify({"length": len(chain), "chain": chain}), 200
     else:
-        return jsonify({"length": 0, "chain": [], "accounts": []}), 404
+        return jsonify({"length": 0, "chain": []}), 404
 
 
 @node.route('/lastblock', methods=['GET'])
@@ -221,22 +219,6 @@ def get_pending_transactions():
 def get_pending_transaction(id):
     if blockchain:
         return jsonify(blockchain.get_pending_transaction(id))
-    else:
-        return "No blockchain, please create a new chain or get the chain from another peer"
-
-
-@node.route('/accounts', methods=['GET'])
-def accounts():
-    if blockchain:
-        return jsonify(blockchain.get_accounts())
-    else:
-        return "No blockchain, please create a new chain or get the chain from another peer"
-
-
-@node.route('/accounts/<key>', methods=['GET'])
-def account(key):
-    if blockchain:
-        return jsonify(blockchain.get_account(key))
     else:
         return "No blockchain, please create a new chain or get the chain from another peer"
 
