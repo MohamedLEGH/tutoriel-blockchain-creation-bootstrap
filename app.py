@@ -195,11 +195,11 @@ def add_block():
         block_data = request.get_json()
         block = Block(block_data["index"],
                       block_data["previous_hash"],
-                      block_data["nonce"], block_data["timestamp"],
+                      block_data["nonce"], 
+                      block_data["timestamp"],
                       block_data["transactions"],
                       block_data["hashval"],
-                      block_data["miner"],
-                      block_data["signature"])
+                      block_data["miner"])
         blockchain.add_block(block)
         return "Block added to the chain", 200
     else:
