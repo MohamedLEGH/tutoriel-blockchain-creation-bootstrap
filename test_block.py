@@ -19,7 +19,7 @@ last_hash = first_block.hashval
 
 second_block = Block(1,last_hash)
 
-second_block.mine()
+second_block.mine(difficulty)
 
 print("Second block is: ")
 
