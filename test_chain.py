@@ -20,7 +20,7 @@ blockchain.mine_block()
 
 print("blockchain: ")
 print(blockchain.to_dict())
-second_block = blockchain.chain[-1]
+second_block = blockchain.blocks_list[-1]
 
 print("Second block: ")
 print(second_block)
