@@ -83,7 +83,7 @@ def get_chain():
 def lastblock():
     global blockchain
     if request.method == 'GET':
-        last_block = blockchain.get_last_block().to_dict()
+        last_block = blockchain.blocks_list[-1].to_dict()
         return jsonify(last_block), 200
 
 
@@ -91,7 +91,7 @@ def lastblock():
 def transactions_lastblock():
     global blockchain
     if request.method == 'GET':
-        transactions = blockchain.get_last_block().get_transactions()
+        transactions = blockchain.blocks_list[-1].transactions
         return jsonify(transactions), 200
 
 
@@ -99,7 +99,7 @@ def transactions_lastblock():
 def transaction_lastblock_by_id(id):
     global blockchain
     if request.method == 'GET':
-        transaction = blockchain.get_last_block().get_transaction(id)
+        transaction = blockchain.blocks_list[-1].transactions[id]
         return jsonify(transaction), 200
 
 
